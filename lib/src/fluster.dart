@@ -46,11 +46,11 @@ class Fluster<T extends Clusterable> {
       points,
       createCluster})
       : _points = points,
-        _trees = List(maxZoom + 2),
+        _trees = List.filled(maxZoom + 2, null),
         _createCluster = createCluster {
-    List<BaseCluster> clusters = List();
+    var clusters = <BaseCluster>[];
 
-    for (int i = 0; i < _points!.length; i++) {
+    for (var i = 0; i < _points!.length; i++) {
       if (_points![i].latitude == null || _points![i].longitude == null) {
         continue;
       }
@@ -60,7 +60,7 @@ class Fluster<T extends Clusterable> {
 
     _trees[maxZoom + 1] = KDBush(points: clusters, nodeSize: nodeSize);
 
-    for (int z = maxZoom; z >= minZoom!; z--) {
+    for (var z = maxZoom; z >= minZoom!; z--) {
       clusters = _buildClusters(clusters, z);
 
       _trees[z] = KDBush(points: clusters, nodeSize: nodeSize);
@@ -97,7 +97,7 @@ class Fluster<T extends Clusterable> {
     List<int?> ids =
         tree.range(_lngX(minLng), _latY(maxLat), _lngX(maxLng), _latY(minLat));
 
-    List<T> result = List();
+    var result = <T>[];
 
     for (int? id in ids) {
       BaseCluster c = tree.points![id!];
@@ -136,7 +136,7 @@ class Fluster<T extends Clusterable> {
     double r = radius! / (extent! * math.pow(2, originZoom - 1));
     List<int?> ids = index.within(origin.x, origin.y, r);
 
-    List<T> children = List();
+    var children = <T>[];
     for (int? id in ids) {
       BaseCluster c = index.points![id!];
 
@@ -153,7 +153,7 @@ class Fluster<T extends Clusterable> {
   /// Returns a list of standalone points (not clusters) that are children of
   /// the given cluster.
   List<T> points(int clusterId) {
-    List<T> points = List();
+    var points = <T>[];
 
     _extractClusterPoints(clusterId, points);
 
@@ -186,7 +186,7 @@ class Fluster<T extends Clusterable> {
   }
 
   List<BaseCluster> _buildClusters(List<BaseCluster> points, int zoom) {
-    List<BaseCluster> clusters = List();
+    var clusters = <BaseCluster>[];
 
     double r = radius! / (extent! * math.pow(2, zoom));
 
@@ -250,7 +250,11 @@ class Fluster<T extends Clusterable> {
     double sin = math.sin(lat * math.pi / 180);
     double y = 0.5 - 0.25 * math.log((1 + sin) / (1 - sin)) / math.pi;
 
-    return y < 0 ? 0 : y > 1 ? 1 : y;
+    return y < 0
+        ? 0
+        : y > 1
+            ? 1
+            : y;
   }
 
   double _xLng(double x) {

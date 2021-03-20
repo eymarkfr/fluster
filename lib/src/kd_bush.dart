@@ -14,8 +14,8 @@ class KDBush {
   List<double?>? coordinates;
 
   KDBush({this.points, this.nodeSize}) {
-    ids = List(points!.length);
-    coordinates = List(points!.length * 2);
+    ids = List.filled(points!.length, null);
+    coordinates = List.filled(points!.length * 2, null);
 
     for (int i = 0; i < points!.length; i++) {
       ids![i] = i;
@@ -75,7 +75,7 @@ class KDBush {
     stack.add(ids!.length - 1);
     stack.add(0);
 
-    List<int?> result = List();
+    var result = <int?>[];
 
     while (stack.isNotEmpty) {
       int axis = stack.removeLast();
@@ -126,7 +126,7 @@ class KDBush {
     stack.add(ids!.length - 1);
     stack.add(0);
 
-    List<int?> result = List();
+    var result = <int?>[];
     double r2 = r * r;
 
     while (stack.isNotEmpty) {
@@ -238,7 +238,11 @@ class KDBush {
     }
   }
 
-  _swapItem({required List<int?> ids, required List<double?> coordinates, required int i, required int j}) {
+  _swapItem(
+      {required List<int?> ids,
+      required List<double?> coordinates,
+      required int i,
+      required int j}) {
     _swapInt(list: ids, i: i, j: j);
     _swapDouble(list: coordinates, i: i * 2, j: j * 2);
     _swapDouble(list: coordinates, i: (i * 2) + 1, j: (j * 2) + 1);
