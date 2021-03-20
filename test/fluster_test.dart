@@ -11,7 +11,7 @@ import 'common.dart';
 
 void main() {
   group('Fluster API Tests', () {
-    Fluster fluster;
+    late Fluster fluster;
 
     setUp(() {
       fluster = Fluster(
